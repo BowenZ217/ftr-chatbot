@@ -1,0 +1,21 @@
+.container {
+    font-family: Arial, sans-serif;
+    color: #333;
+    background-color: #f9f9f9;
+    height: calc(100vh - 5rem);
+}
+
+.sidebar {
+    background-color: #f0f0f0;
+    border-right: 1px solid #ddd;
+}
+
+.chatInterface {
+    background-color: #fff;
+    color: #444;
+}
+
+.chatInput {
+    border-top: 1px solid #ddd;
+    padding: 1rem;
+}

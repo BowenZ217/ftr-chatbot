@@ -1,0 +1,30 @@
+/* src/components/Chatbot/FeedbackButtons.module.css */
+
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem; /* rounded-md */
+    border: 1px solid #d1d5db; /* border-gray-300 */
+    background-color: white;
+    padding: 0.5rem; /* p-2 */
+    color: #4b5563; /* text-gray-600 */
+    transition: background-color 0.2s;
+}
+
+.button:hover {
+    background-color: #f3f4f6; /* hover:bg-gray-100 */
+}
+
+.button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #d1d5db; /* focus:ring-gray-300 */
+}
+
+.like {
+    color: #10b981; /* text-green-600 */
+}
+
+.dislike {
+    color: #ef4444; /* text-red-600 */
+}

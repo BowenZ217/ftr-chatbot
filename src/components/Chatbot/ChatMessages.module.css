@@ -1,0 +1,39 @@
+.customScrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.customScrollbar::-webkit-scrollbar-track {
+    background: #e0e7ff;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb {
+    background-color: #8ab2f26f;
+    border-radius: 4px;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #1d4ed8;
+}
+
+.scrollDownButton {
+    position: absolute;
+    bottom: 1rem; /* 4 * 4px = 16px */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #2563eb; /* bg-blue-600 */
+    color: white;
+    padding: 0.75rem; /* p-3 */
+    border-radius: 9999px; /* rounded-full */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* shadow-lg */
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.scrollDownButton:hover {
+    background-color: #1d4ed8; /* hover:bg-blue-700 */
+    transform: scale(1.05); /* hover:scale-105 */
+}
+
+.icon {
+    height: 1.5rem; /* h-6 */
+    width: 1.5rem; /* w-6 */
+}
