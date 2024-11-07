@@ -1,0 +1,49 @@
+/* Container for the text input and send button */
+.container {
+    display: flex;
+    align-items: center;
+}
+
+/* Styling for the textarea */
+.textarea {
+    flex-grow: 1; /* Allows the textarea to expand and fill available space */
+    border: 1px solid #d1d5db; /* Gray border */
+    border-radius: 0.375rem; /* Rounded corners */
+    padding: 0.5rem 1rem; /* Padding inside the textarea */
+    margin-right: 0.5rem; /* Right margin */
+    resize: none; /* Disable resizing on the bottom-right corner */
+    overflow-y: auto; /* Enable vertical scrolling */
+    min-height: 40px; /* Minimum height */
+    max-height: 100px; /* Maximum height */
+}
+
+/* Styling for the send button */
+.sendButton {
+    background-color: #3b82f6; /* Blue background */
+    color: white; /* White text */
+    padding: 0.5rem 1rem; /* Padding inside the button */
+    border-radius: 0.375rem; /* Rounded corners */
+}
+
+/* Custom scrollbar styling for Webkit browsers */
+.textarea::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+}
+
+.textarea::-webkit-scrollbar-track {
+    background: #f0f0f0; /* Background color of the scrollbar track */
+    border-radius: 10px; /* Rounded track edges */
+}
+
+.textarea::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.6); /* Scrollbar thumb color with transparency */
+    border-radius: 10px; /* Rounded scrollbar thumb */
+    border: 2px solid transparent; /* Adds padding inside the thumb */
+    background-clip: content-box; /* Clip the thumb for better appearance */
+}
+
+/* Firefox-specific scrollbar styling */
+.textarea {
+    scrollbar-width: thin; /* Reduces scrollbar width in Firefox */
+    scrollbar-color: rgba(255, 255, 255, 0.6) #f0f0f0; /* Thumb and track colors for Firefox */
+}

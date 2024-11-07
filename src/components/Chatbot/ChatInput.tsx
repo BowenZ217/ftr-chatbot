@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import styles from './ChatInput.module.css';
 
 interface ChatInputProps {
     message: string; // Current text in the message input
@@ -34,7 +35,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ message, setMessage, onSendMessag
     };
 
     return (
-        <div className="flex items-center">
+        <div className={styles.container}>
             {/* Text input area */}
             <textarea
                 ref={textareaRef}
@@ -46,12 +47,11 @@ const ChatInput: React.FC<ChatInputProps> = ({ message, setMessage, onSendMessag
                 onInput={handleInput}
                 onKeyDown={handleKeyDown} // Keydown event listener
                 rows={1}
-                className="flex-grow border border-gray-300 rounded px-4 py-2 mr-2 resize-none overflow-y-auto"
+                className={styles.textarea}
                 placeholder="Type your message..."
-                style={{ minHeight: '40px', maxHeight: '100px' }}
             />
             {/* Send button */}
-            <button onClick={handleSendMessage} className="bg-blue-500 text-white px-4 py-2 rounded">
+            <button onClick={handleSendMessage} className={styles.sendButton}>
                 Send
             </button>
         </div>
