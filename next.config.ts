@@ -1,9 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+    /* config options here */
     images: {
-      domains: ['upload.wikimedia.org'], // Add the allowed domain here
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'upload.wikimedia.org',
+                port: '',
+                pathname: '/**',
+            },
+        ],
     },
 };
 

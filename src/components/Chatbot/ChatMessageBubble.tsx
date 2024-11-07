@@ -34,6 +34,7 @@ const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({ message, isFirstM
                     width={35}
                     height={35}
                     className="rounded-full mr-2"
+                    style={{ width: "auto" }}
                 />
             )}
             

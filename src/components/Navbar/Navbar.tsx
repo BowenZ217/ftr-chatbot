@@ -18,6 +18,7 @@ const Header: React.FC = () => {
                         width={36}
                         height={30}
                         className="cursor-pointer"
+                        style={{ height: "auto" }}
                     />
                 </Link>
                 <button className="text-3xl md:hidden ml-5" onClick={() => setShowMobileMenu(!showMobileMenu)}>
