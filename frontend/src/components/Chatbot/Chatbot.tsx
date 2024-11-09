@@ -31,17 +31,16 @@ const Chatbot: React.FC = () => {
             setMessages((prevMessages) => [...prevMessages, newMessage]);
     
             try {
-                // const response = await fetch('http://localhost:8080/chat', {
-                //     method: 'POST',
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //     },
-                //     body: JSON.stringify({ message }),
-                // });
+                const response = await fetch('http://localhost:8080/api/chatbot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message }),
+                });
     
-                // const data = await response.json();
-                // const assistantMessage = { sender: 'assistant', text: data.reply };
-                const assistantMessage: Message = { sender: 'assistant', text: "response to " + message };
+                const data = await response.json();
+                const assistantMessage: Message = { sender: 'assistant', text: data.reply };
                 setMessages((prevMessages) => [...prevMessages, assistantMessage]);
                 setMessage('');
             } catch (error) {

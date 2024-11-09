@@ -13,12 +13,44 @@ interface ChatMessageBubbleProps {
 }
 
 const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({ message, isFirstMessage = false }) => {
-    const handleLike = () => {
-        console.log('Liked!');
+    const handleLike = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/chatbot_feedback/like', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ reply: message }),
+            });
+
+            if (response.ok) {
+                console.log('Message liked successfully!');
+            } else {
+                console.error('Failed to like message');
+            }
+        } catch (error) {
+            console.error('Error liking message:', error);
+        }
     };
 
-    const handleDislike = () => {
-        console.log('Disliked!');
+    const handleDislike = async (feedback: string) => {
+        try {
+            const response = await fetch('http://localhost:8080/api/chatbot_feedback/dislike', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ reply: message, feedback }),
+            });
+
+            if (response.ok) {
+                console.log('Message disliked successfully!');
+            } else {
+                console.error('Failed to dislike message');
+            }
+        } catch (error) {
+            console.error('Error disliking message:', error);
+        }
     };
 
     return (

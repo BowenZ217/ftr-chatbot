@@ -5,7 +5,7 @@ import styles from './FeedbackButtons.module.css';
 
 interface FeedbackButtonsProps {
     onLike: () => void;
-    onDislike: () => void;
+    onDislike: (message: string) => void;
 }
 
 const FeedbackButtons: React.FC<FeedbackButtonsProps> = ({ onLike, onDislike }) => {
@@ -29,8 +29,7 @@ const FeedbackButtons: React.FC<FeedbackButtonsProps> = ({ onLike, onDislike }) 
         setFeedbackText('');
 
         // Send feedback to the server
-        console.log(feedbackText);
-        onDislike();
+        onDislike(feedbackText);
 
         // Show thank you message
         setThankYouMessage(true);
