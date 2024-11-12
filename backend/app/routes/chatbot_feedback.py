@@ -1,5 +1,8 @@
 """
 TODO: replace to database such as SQLite or PostgreSQL
+TODO: Maybe need to add authentication to routes ?
+TODO: Add more error handling with data integrity checks
+TODO: sanitize or escape characters to prevent injection harmful code
 """
 
 from flask import Blueprint, jsonify, request
