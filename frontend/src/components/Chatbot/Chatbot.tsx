@@ -8,6 +8,7 @@ import styles from './Chatbot.module.css';
 interface Message {
     sender: 'user' | 'assistant';
     text: string;
+    replyID?: number;  // Optional field to store the reply ID from the server
 }
 
 const Chatbot: React.FC = () => {
@@ -24,6 +25,7 @@ const Chatbot: React.FC = () => {
         },
     ]);
     const [message, setMessage] = useState('');
+    const [userID, setUserID] = useState(1);
 
     const handleSendMessage = async () => {
         if (message.trim()) {
@@ -40,7 +42,11 @@ const Chatbot: React.FC = () => {
                 });
     
                 const data = await response.json();
-                const assistantMessage: Message = { sender: 'assistant', text: data.reply };
+                const assistantMessage: Message = {
+                    sender: 'assistant',
+                    text: data.reply,
+                    replyID: data.replyID  // Include the replyID if provided by the server
+                };
                 setMessages((prevMessages) => [...prevMessages, assistantMessage]);
                 setMessage('');
             } catch (error) {
@@ -59,6 +65,7 @@ const Chatbot: React.FC = () => {
             {/* Main Chat Interface */}
             <div className={`${styles.chatInterface} w-10/12 flex flex-col`}>
                 <ChatInterface
+                    userID={userID}
                     message={message}
                     messages={messages}
                     setMessage={setMessage}

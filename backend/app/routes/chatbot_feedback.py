@@ -6,54 +6,71 @@ TODO: sanitize or escape characters to prevent injection harmful code
 """
 
 from flask import Blueprint, jsonify, request
-from app.utils import read_data, write_data
+from app.models import db, Like, Dislike, User, Reply
+from sqlalchemy.exc import IntegrityError
 
 chatbot_feedback_bp = Blueprint('chatbot_feedback', __name__)
+
 
 @chatbot_feedback_bp.route('/like', methods=['POST'])
 def add_like():
     """
-    add liked reply to feedback
+    Add liked reply to feedback.
     """
-    data = read_data()
-    reply = request.json.get("reply", {}).get("text", "")
+    reply_id = request.json.get("replyID", None)
+    user_id = request.json.get("userID", None)
     
-    if reply and reply not in data["likes"]:
-        data["likes"].append(reply)
-        write_data(data)
+    if not reply_id or not user_id:
+        return jsonify({"error": "Missing replyID or userID"}), 400
+    
+    new_like = Like(ReplyID=reply_id, UserID=user_id)
+    try:
+        db.session.add(new_like)
+        db.session.commit()
         return jsonify({"message": "Reply liked successfully!"}), 201
-    else:
+    except IntegrityError:
+        db.session.rollback()
         return jsonify({"error": "Invalid or duplicate reply"}), 400
 
 @chatbot_feedback_bp.route('/dislike', methods=['POST'])
 def add_dislike():
     """
-    add disliked reply to feedback
+    Add disliked reply to feedback.
     """
-    data = read_data()
-    reply = request.json.get("reply", {}).get("text", "")
-    feedback = request.json.get("feedback")
-
-    if reply and feedback:
-        dislike_entry = {"reply": reply, "feedback": feedback}
-        data["dislikes"].append(dislike_entry)
-        write_data(data)
+    reply_id = request.json.get("replyID", None)
+    user_id = request.json.get("userID", None)
+    feedback = request.json.get("feedback", None)
+    
+    if not reply_id or not user_id or not feedback:
+        return jsonify({"error": "All fields (replyID, userID, feedback) are required"}), 400
+    
+    new_dislike = Dislike(ReplyID=reply_id, UserID=user_id, Feedback=feedback)
+    try:
+        db.session.add(new_dislike)
+        db.session.commit()
         return jsonify({"message": "Reply disliked successfully!"}), 201
-    else:
-        return jsonify({"error": "Reply and feedback required"}), 400
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify({"error": "Error handling dislike"}), 400
 
 @chatbot_feedback_bp.route('/likes', methods=['GET'])
 def get_likes():
     """
-    get all liked replies and feedback
+    Get all liked replies. (`/api/chatbot_feedback/likes`)
     """
-    data = read_data()
-    return jsonify(data["likes"])
+    # Joining the Likes table with the Replies table
+    likes = db.session.query(Like.ReplyID, Reply.Content, Like.UserID).\
+        join(Reply, Reply.ReplyID == Like.ReplyID).all()
+    like_list = [{'ReplyID': like.ReplyID, 'Content': like.Content, 'UserID': like.UserID} for like in likes]
+    return jsonify(like_list)
 
 @chatbot_feedback_bp.route('/dislikes', methods=['GET'])
 def get_dislikes():
     """
-    get all disliked replies and feedback
+    Get all disliked replies. (`/api/chatbot_feedback/dislikes`)
     """
-    data = read_data()
-    return jsonify(data["dislikes"])
+    # Joining the Dislikes table with the Replies table
+    dislikes = db.session.query(Dislike.ReplyID, Reply.Content, Dislike.UserID, Dislike.Feedback).\
+        join(Reply, Reply.ReplyID == Dislike.ReplyID).all()
+    dislike_list = [{'ReplyID': dislike.ReplyID, 'Content': dislike.Content, 'UserID': dislike.UserID, 'Feedback': dislike.Feedback} for dislike in dislikes]
+    return jsonify(dislike_list)

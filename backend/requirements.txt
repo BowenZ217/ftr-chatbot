@@ -1,2 +1,6 @@
 Flask
 Flask-Cors
+SQLAlchemy
+mysqlclient
+pymysql
+python-dotenv

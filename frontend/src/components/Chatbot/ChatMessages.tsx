@@ -3,11 +3,17 @@ import ChatMessageBubble from './ChatMessageBubble';
 import { IconArrowDown } from './Icons';
 import styles from './ChatMessages.module.css';
 
+interface Message {
+    sender: 'user' | 'assistant';
+    text: string;
+    replyID?: number;
+}
 interface ChatMessagesProps {
-    messages: { sender: 'user' | 'assistant'; text: string }[];
+    userID: number;
+    messages: Message[];
 }
 
-const ChatMessages: React.FC<ChatMessagesProps> = ({ messages }) => {
+const ChatMessages: React.FC<ChatMessagesProps> = ({ userID, messages }) => {
     const messagesEndRef = useRef<HTMLDivElement>(null); // Reference to the end of the message list for scrolling
     const messagesContainerRef = useRef<HTMLDivElement>(null); // Reference to the container to handle scroll events
     const [showScrollDownButton, setShowScrollDownButton] = useState(false); // State to control the visibility of the "scroll down" button
@@ -43,6 +49,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages }) => {
                 {messages.map((message, index) => (
                     <ChatMessageBubble
                         key={index}
+                        userID={userID}
                         message={message}
                         isFirstMessage={message.sender === 'assistant' && index === 0}
                     />

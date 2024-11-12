@@ -53,7 +53,12 @@ cd backend
 pip install -r requirements.txt
 ```
 
-3. Start the development server:
+3. Configure Environment Variables:
+
+   - Rename `backend/.env.sample` to `.env` within the same directory.
+   - Update the `.env` file with your environment-specific configurations as needed.
+
+4. Start the development server:
 
 ```shell
 python ./run.py

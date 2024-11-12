@@ -5,28 +5,35 @@ import FeedbackButtons from './FeedbackButtons';
 interface Message {
     sender: 'user' | 'assistant';
     text: string;
+    replyID?: number;
 }
 
 interface ChatMessageBubbleProps {
+    userID: number;
     message: Message;
     isFirstMessage?: boolean;
 }
 
-const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({ message, isFirstMessage = false }) => {
+const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({ userID, message, isFirstMessage = false }) => {
     const handleLike = async () => {
+        if (message.replyID === undefined) {
+            console.error("Cannot like a message without a replyID.");
+            return;
+        }
+        
         try {
             const response = await fetch('http://localhost:8080/api/chatbot_feedback/like', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ reply: message }),
+                body: JSON.stringify({ replyID: message.replyID, userID: userID }),
             });
 
             if (response.ok) {
                 console.log('Message liked successfully!');
             } else {
-                console.error('Failed to like message');
+                console.error('Failed to like message:', await response.json());
             }
         } catch (error) {
             console.error('Error liking message:', error);
@@ -34,19 +41,24 @@ const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({ message, isFirstM
     };
 
     const handleDislike = async (feedback: string) => {
+        if (message.replyID === undefined) {
+            console.error("Cannot dislike a message without a replyID.");
+            return;
+        }
+
         try {
             const response = await fetch('http://localhost:8080/api/chatbot_feedback/dislike', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ reply: message, feedback }),
+                body: JSON.stringify({ replyID: message.replyID, userID: userID, feedback }),
             });
 
             if (response.ok) {
                 console.log('Message disliked successfully!');
             } else {
-                console.error('Failed to dislike message');
+                console.error('Failed to dislike message:', await response.json());
             }
         } catch (error) {
             console.error('Error disliking message:', error);
