@@ -26,6 +26,13 @@ def add_like():
     new_like = Like(ReplyID=reply_id, UserID=user_id)
     try:
         db.session.add(new_like)
+        
+        reply = Reply.query.get(reply_id)
+        if reply:
+            reply.Selected = True
+        else:
+            return jsonify({"error": "Reply not found"}), 404
+
         db.session.commit()
         return jsonify({"message": "Reply liked successfully!"}), 201
     except IntegrityError:
