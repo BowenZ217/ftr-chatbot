@@ -55,8 +55,9 @@ pip install -r requirements.txt
 
 3. Configure Environment Variables:
 
-   - Rename `backend/.env.sample` to `.env` within the same directory.
-   - Update the `.env` file with your environment-specific configurations as needed.
+- Locate the `backend/.env.sample` file and rename it to `.env` within the same directory.
+- Open the newly renamed `.env` file and update the placeholders with your specific environment configurations.
+- For testing purposes, you can use a [free database provider](https://www.freesqldatabase.com/) to quickly set up a database without cost.
 
 4. Start the development server:
 
