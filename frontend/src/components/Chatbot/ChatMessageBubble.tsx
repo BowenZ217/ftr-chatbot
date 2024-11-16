@@ -1,4 +1,8 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
+import rehypeSanitize from 'rehype-sanitize';
 import Image from 'next/image';
 import FeedbackButtons from './FeedbackButtons';
 
@@ -90,7 +94,12 @@ const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({ userID, message, 
                         : 'bg-blue-500 text-white'
                 } shadow-md`}
             >
-                {message.text}
+                <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    rehypePlugins={[rehypeRaw, rehypeSanitize]}
+                >
+                    {message.text}
+                </ReactMarkdown>
             </div>
 
             {/* FeedbackButtons are only shown for assistant messages */}
