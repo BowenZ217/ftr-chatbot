@@ -54,10 +54,13 @@ pip install -r requirements.txt
 ```
 
 3. Configure Environment Variables:
-
-- Locate the `backend/.env.sample` file and rename it to `.env` within the same directory.
-- Open the newly renamed `.env` file and update the placeholders with your specific environment configurations.
-- For testing purposes, you can use a [free database provider](https://www.freesqldatabase.com/) to quickly set up a database without cost.
+    - Locate the `backend/.env.sample` file and rename it to `.env` within the same directory.
+    - For testing purposes, you can use a [free database provider](https://www.freesqldatabase.com/) to quickly set up a database without cost.
+    - For [Gemini API](https://github.com/google-gemini/generative-ai-python):
+        1. Go to [Google AI Studio](https://aistudio.google.com/).
+        2. Login with your Google account.
+        3. [Create](https://aistudio.google.com/app/apikey) an API key.
+    - Open the newly renamed `.env` file and update the placeholders with your specific environment configurations.
 
 4. Start the development server:
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ChatHistorySidebar from './ChatHistorySidebar';
 import ChatInterface from './ChatInterface';
 import styles from './Chatbot.module.css';
@@ -26,6 +26,15 @@ const Chatbot: React.FC = () => {
     ]);
     const [message, setMessage] = useState('');
     const [userID, setUserID] = useState(1);
+    const [sessionID, setSessionID] = useState<string | null>(null);
+
+    useEffect(() => {
+        // On component mount, check if session_id exists in localStorage
+        const storedSessionID = localStorage.getItem('session_id');
+        if (storedSessionID) {
+            setSessionID(storedSessionID);
+        }
+    }, []);
 
     const handleSendMessage = async () => {
         if (message.trim()) {
@@ -38,10 +47,19 @@ const Chatbot: React.FC = () => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ message }),
+                    body: JSON.stringify({ 
+                        message, 
+                        session_id: sessionID
+                    }),
                 });
     
                 const data = await response.json();
+
+                if (!sessionID && data.session_id) {
+                    setSessionID(data.session_id);
+                    localStorage.setItem('session_id', data.session_id);
+                }
+
                 const assistantMessage: Message = {
                     sender: 'assistant',
                     text: data.reply,

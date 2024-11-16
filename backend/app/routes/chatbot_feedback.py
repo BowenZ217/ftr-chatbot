@@ -1,5 +1,4 @@
 """
-TODO: replace to database such as SQLite or PostgreSQL
 TODO: Maybe need to add authentication to routes ?
 TODO: Add more error handling with data integrity checks
 TODO: sanitize or escape characters to prevent injection harmful code
@@ -19,13 +18,14 @@ def add_like():
     """
     Add liked reply to feedback.
     """
-    reply_id = request.json.get("replyID", None)
-    user_id = request.json.get("userID", None)
+    data = request.get_json()
+    reply_id = data.get("replyID", None)
+    user_id = data.get("userID", None)
     
     if not reply_id or not user_id:
         return jsonify({"error": "Missing replyID or userID"}), 400
     
-    new_like = Like(ReplyID=reply_id, UserID=user_id)
+    new_like = Like(reply_id=reply_id, user_id=user_id)
     try:
         db.session.add(new_like)
         
@@ -46,14 +46,15 @@ def add_dislike():
     """
     Add disliked reply to feedback.
     """
-    reply_id = request.json.get("replyID", None)
-    user_id = request.json.get("userID", None)
-    feedback = request.json.get("feedback", None)
+    data = request.get_json()
+    reply_id = data.get("replyID", None)
+    user_id = data.get("userID", None)
+    feedback = data.get("feedback", None)
     
     if not reply_id or not user_id or not feedback:
         return jsonify({"error": "All fields (replyID, userID, feedback) are required"}), 400
     
-    new_dislike = Dislike(ReplyID=reply_id, UserID=user_id, Feedback=feedback)
+    new_dislike = Dislike(reply_id=reply_id, user_id=user_id, feedback=feedback)
     try:
         db.session.add(new_dislike)
         db.session.commit()
@@ -130,7 +131,7 @@ def get_selected_replies():
     start_date = datetime.strptime(start_date_str, '%Y-%m-%d') if start_date_str else None
     end_date = datetime.strptime(end_date_str, '%Y-%m-%d') if end_date_str else None
 
-    query = db.session.query(Reply.Content).filter(Reply.Selected.is_(True))
+    query = db.session.query(Reply.UserInput, Reply.Content).filter(Reply.Selected.is_(True))
 
     if start_date:
         query = query.filter(Reply.CreatedAt >= start_date)
@@ -139,9 +140,13 @@ def get_selected_replies():
 
     total_count = query.count()
     max_page = (total_count + per_page - 1) // per_page
-    selected_contents = query.offset((page - 1) * per_page).limit(per_page).all()
+    selected_replies = query.offset((page - 1) * per_page).limit(per_page).all()
 
-    content_list = [content[0] for content in selected_contents]
+    # Format the data as a list of dictionaries
+    content_list = [
+        {"text_input": user_input, "output": content}
+        for user_input, content in selected_replies
+    ]
     return jsonify({'maxpage': max_page, 'data': content_list})
 
 @chatbot_feedback_bp.route('/batch_update_selected', methods=['POST'])
