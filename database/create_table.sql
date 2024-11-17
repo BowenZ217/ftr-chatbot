@@ -13,7 +13,7 @@ CREATE TABLE Users (
     Username VARCHAR(255) NOT NULL,
     Email VARCHAR(255),
     UserPassword VARCHAR(255),
-    Role ENUM('admin', 'user', 'guest') NOT NULL DEFAULT 'user',
+    Role ENUM('admin', 'user', 'premium') NOT NULL DEFAULT 'user',
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -54,3 +54,7 @@ INSERT INTO Users (Username, Email, UserPassword, Role)
 VALUES ('ftr-admin', 'ftradmin@test.com', 'ftradmin', 'admin');
 -- it should be hashed in real world scenario, such as bcrypt
 -- VALUES ('ftr-admin', 'ftradmin@test.com', SHA2('ftradmin', 256), 'admin');
+INSERT INTO Users (Username, Email, UserPassword, Role)
+VALUES ('ftr-test1', 'ftrtest1@test.com', 'ftrtest1', 'user');
+INSERT INTO Users (Username, Email, UserPassword, Role)
+VALUES ('ftr-test2', 'ftrtest2@test.com', 'ftrtest2', 'premium');

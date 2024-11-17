@@ -4,7 +4,18 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-const Header: React.FC = () => {
+type User = {
+    userId: number;
+    username: string;
+    email: string;
+    role: string;
+}
+
+interface NavbarProps {
+    user: User | null;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ user }) => {
     const [showMobileMenu, setShowMobileMenu] = useState(false);
 
     return (
@@ -34,6 +45,10 @@ const Header: React.FC = () => {
                 <li><Link href="/nfl" className="px-6 py-6 hover:text-blue-500">NFL</Link></li>
                 <li><Link href="/nba" className="px-6 py-6 hover:text-blue-500">NBA</Link></li>
                 <li><Link href="/mlb" className="px-6 py-6 hover:text-blue-500">MLB</Link></li>
+                <li><Link href="/chatbot" className="px-6 py-6 hover:text-blue-500">Chatbot</Link></li>
+                {user?.role === "admin" && (
+                    <li><Link href="/admin/feedback-manager" className="px-6 py-6 hover:text-blue-500">FeedbackManager</Link></li>
+                )}
             </ul>
 
             {/* Right Section */}
@@ -65,6 +80,10 @@ const Header: React.FC = () => {
                 <li className="px-12"><Link href="/nfl" className="py-6 block font-bold">NFL</Link></li>
                 <li className="px-12"><Link href="/nba" className="py-6 block font-bold">NBA</Link></li>
                 <li className="px-12"><Link href="/mlb" className="py-6 block font-bold">MLB</Link></li>
+                <li className="px-12"><Link href="/chatbot" className="py-6 block font-bold">Chatbot</Link></li>
+                {user?.role === "admin" && (
+                    <li className="px-12"><Link href="/admin/feedback-manager" className="py-6 block font-bold">FeedbackManager</Link></li>
+                )}
                 <li className="px-12 mt-10"><Link href="/sign-in" className="block text-center px-6 py-3 text-gray-800 font-semibold bg-blue-200 rounded-full">Sign In</Link></li>
                 <li className="px-12 mt-5"><Link href="/pricing" className="block text-center px-6 py-3 text-gray-800 font-semibold bg-yellow-200 rounded-full">Premium</Link></li>
             </ul>
@@ -72,4 +91,4 @@ const Header: React.FC = () => {
     );
 };
 
-export default Header;
+export default Navbar;

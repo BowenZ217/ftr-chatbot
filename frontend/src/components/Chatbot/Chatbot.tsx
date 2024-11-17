@@ -5,13 +5,24 @@ import ChatHistorySidebar from './ChatHistorySidebar';
 import ChatInterface from './ChatInterface';
 import styles from './Chatbot.module.css';
 
+type User = {
+    userId: number;
+    username: string;
+    email: string;
+    role: string;
+}
+
+interface ChatbotProps {
+    user: User | null;
+}
+
 interface Message {
     sender: 'user' | 'assistant';
     text: string;
     replyID?: number;  // Optional field to store the reply ID from the server
 }
 
-const Chatbot: React.FC = () => {
+const Chatbot: React.FC<ChatbotProps> = ({ user }) => {
     const [chatHistory, setChatHistory] = useState([
         'Conversation 1',
         'Conversation 2',
@@ -25,7 +36,6 @@ const Chatbot: React.FC = () => {
         },
     ]);
     const [message, setMessage] = useState('');
-    const [userID, setUserID] = useState(1);
     const [sessionID, setSessionID] = useState<string | null>(null);
 
     useEffect(() => {
@@ -83,7 +93,7 @@ const Chatbot: React.FC = () => {
             {/* Main Chat Interface */}
             <div className={`${styles.chatInterface} w-10/12 flex flex-col`}>
                 <ChatInterface
-                    userID={userID}
+                    userID={user?.userId || 2}
                     message={message}
                     messages={messages}
                     setMessage={setMessage}

@@ -6,7 +6,7 @@ TODO: sanitize or escape characters to prevent injection harmful code
 
 from flask import Blueprint, jsonify, request
 from app.models import db, Like, Dislike, User, Reply
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy import and_
 from sqlalchemy.exc import IntegrityError
 
@@ -74,9 +74,9 @@ def get_likes():
     per_page = 20
 
     start_date = datetime.strptime(start_date_str, '%Y-%m-%d') if start_date_str else None
-    end_date = datetime.strptime(end_date_str, '%Y-%m-%d') if end_date_str else None
+    end_date = datetime.strptime(end_date_str, '%Y-%m-%d') + timedelta(days=1) if end_date_str else None
 
-    query = db.session.query(Like.ReplyID, Reply.Content, Like.UserID, Reply.Selected).join(Reply, Reply.ReplyID == Like.ReplyID)
+    query = db.session.query(Like.ReplyID, Reply.UserInput, Reply.Content, Like.UserID, Reply.Selected).join(Reply, Reply.ReplyID == Like.ReplyID)
 
     if start_date:
         query = query.filter(Like.CreatedAt >= start_date)
@@ -87,7 +87,7 @@ def get_likes():
     max_page = (total_count + per_page - 1) // per_page
     likes = query.offset((page - 1) * per_page).limit(per_page).all()
 
-    like_list = [{'ReplyID': like.ReplyID, 'Content': like.Content, 'UserID': like.UserID, 'Selected': like.Selected} for like in likes]
+    like_list = [{'ReplyID': like.ReplyID, 'UserInput': like.UserInput, 'Content': like.Content, 'UserID': like.UserID, 'Selected': like.Selected} for like in likes]
     return jsonify({'data': like_list, 'maxpage': max_page})
 
 @chatbot_feedback_bp.route('/dislikes', methods=['GET'])
@@ -101,9 +101,9 @@ def get_dislikes():
     per_page = 20
 
     start_date = datetime.strptime(start_date_str, '%Y-%m-%d') if start_date_str else None
-    end_date = datetime.strptime(end_date_str, '%Y-%m-%d') if end_date_str else None
+    end_date = datetime.strptime(end_date_str, '%Y-%m-%d') + timedelta(days=1) if end_date_str else None
 
-    query = db.session.query(Dislike.ReplyID, Reply.Content, Dislike.UserID, Dislike.Feedback, Reply.Selected).join(Reply, Reply.ReplyID == Dislike.ReplyID)
+    query = db.session.query(Dislike.ReplyID, Reply.UserInput, Reply.Content, Dislike.UserID, Dislike.Feedback, Reply.Selected).join(Reply, Reply.ReplyID == Dislike.ReplyID)
 
     if start_date:
         query = query.filter(Dislike.CreatedAt >= start_date)
@@ -115,7 +115,7 @@ def get_dislikes():
 
     dislikes = query.offset((page - 1) * per_page).limit(per_page).all()
     
-    dislike_list = [{'ReplyID': dislike.ReplyID, 'Content': dislike.Content, 'UserID': dislike.UserID, 'Feedback': dislike.Feedback, 'Selected': dislike.Selected} for dislike in dislikes]
+    dislike_list = [{'ReplyID': dislike.ReplyID, 'UserInput': dislike.UserInput, 'Content': dislike.Content, 'UserID': dislike.UserID, 'Feedback': dislike.Feedback, 'Selected': dislike.Selected} for dislike in dislikes]
     return jsonify({'data': dislike_list, 'maxpage': max_page})
 
 @chatbot_feedback_bp.route('/selected_replies', methods=['GET'])
