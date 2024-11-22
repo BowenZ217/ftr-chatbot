@@ -76,7 +76,6 @@ const Chatbot: React.FC<ChatbotProps> = ({ user }) => {
                     replyID: data.replyID  // Include the replyID if provided by the server
                 };
                 setMessages((prevMessages) => [...prevMessages, assistantMessage]);
-                setMessage('');
             } catch (error) {
                 console.error('Error fetching response:', error);
             }

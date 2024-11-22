@@ -14,20 +14,55 @@ interface ChatMessagesProps {
 }
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({ userID, messages }) => {
-    const messagesEndRef = useRef<HTMLDivElement>(null); // Reference to the end of the message list for scrolling
-    const messagesContainerRef = useRef<HTMLDivElement>(null); // Reference to the container to handle scroll events
-    const [showScrollDownButton, setShowScrollDownButton] = useState(false); // State to control the visibility of the "scroll down" button
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const messagesContainerRef = useRef<HTMLDivElement>(null);
+    const [showScrollDownButton, setShowScrollDownButton] = useState(false);
+    const [renderedMessages, setRenderedMessages] = useState<Message[]>([]);
+    const lastMessageRef = useRef<Message | null>(null);
 
     // Automatically scroll to the latest message
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
+    // Render messages one by one
+    useEffect(() => {
+        const renderMessages = async () => {
+            const newMessages: Message[] = [...renderedMessages];
+
+            const lastMessage = messages[messages.length - 1];
+            const prevLastMessage = lastMessageRef.current;
+
+            // Animate the assistant's typing effect
+            if (
+                lastMessage &&
+                lastMessage.sender === 'assistant' &&
+                (!prevLastMessage || lastMessage.replyID !== prevLastMessage.replyID)
+            ) {
+                let currentText = '';
+                for (let i = 0; i <= lastMessage.text.length; i++) {
+                    await new Promise((resolve) => setTimeout(resolve, 20)); // delay 20 ms
+                    currentText = lastMessage.text.slice(0, i);
+                    const tempMessage = { ...lastMessage, text: currentText };
+                    setRenderedMessages([...newMessages, tempMessage]);
+                }
+                newMessages.push(lastMessage);
+            } else {
+                newMessages.push(lastMessage);
+                setRenderedMessages(newMessages);
+            }
+
+            lastMessageRef.current = lastMessage;
+        };
+
+        renderMessages();
+    }, [messages]);
+
     // Scroll to the bottom every time the messages update
     useEffect(() => {
         scrollToBottom();
         handleScroll(); // Ensure scroll button visibility is updated after new message
-    }, [messages]);
+    }, [renderedMessages]);
 
     // Detect if the user has scrolled up and show the "scroll down" button if not at the bottom
     const handleScroll = () => {
@@ -46,7 +81,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ userID, messages }) => {
                 onScroll={handleScroll}
                 className={`overflow-y-auto h-full ${styles.customScrollbar}`}
             >
-                {messages.map((message, index) => (
+                {renderedMessages.map((message, index) => (
                     <ChatMessageBubble
                         key={index}
                         userID={userID}
