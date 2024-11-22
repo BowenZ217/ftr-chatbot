@@ -20,6 +20,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ message, setMessage, onSendMessag
 
     // Handles sending the message and resetting the input height
     const handleSendMessage = () => {
+        setMessage('');
         onSendMessage();
         if (textareaRef.current) {
             textareaRef.current.style.height = '40px'; // Reset height after sending
